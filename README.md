@@ -1,29 +1,38 @@
-# Xikita LP
+# Xikita LP (React + Tailwind + Framer Motion)
 
-Landing page estatica da Xikita Boutique, otimizada para conversao local e digital.
+Landing page premium da Xikita Boutique com foco em conversão local e digital.
 
-## Estrutura
+## Stack
 
-- `index.html` - pagina principal
-- `styles.css` - estilos responsivos
-- `vercel.json` - config de deploy na Vercel
+- React (Vite)
+- Tailwind CSS
+- Framer Motion
+- Vercel
+
+## Rodar local
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
 
 ## Deploy na Vercel
 
 1. Acesse `https://vercel.com/new`.
-2. Importe o repositorio `performancedigital/xikitalp`.
-3. Em **Framework Preset**, selecione `Other`.
-4. Configure:
-   - **Root Directory**: `./` (raiz)
-   - **Build Command**: vazio
-   - **Output Directory**: vazio
-5. Clique em **Deploy**.
+2. Importe `performancedigital/xikitalp`.
+3. Framework: `Vite`.
+4. Build Command: `npm run build`.
+5. Output Directory: `dist`.
+6. Deploy.
 
-## Pos deploy (recomendado)
+## Ajustes recomendados pós-deploy
 
-- Em `Settings > Domains`, conecte seu dominio.
-- Atualize no `index.html`:
-  - `[SUA CIDADE]`
-  - `[telefone]`, `[email]`, `[endereco completo]`
-  - links reais de Instagram, Facebook, Mercado Livre e WhatsApp.
-- Ajuste `LocalBusiness` (JSON-LD) com os dados reais.
+- Atualizar links reais de Instagram/Facebook/WhatsApp/Mercado Livre.
+- Configurar domínio próprio em `Settings > Domains`.
+- Adicionar imagem Open Graph final.
