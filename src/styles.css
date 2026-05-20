@@ -33,6 +33,11 @@ body {
     linear-gradient(180deg, #fffdfb 0%, #fff9f1 100%);
 }
 
+img {
+  display: block;
+  max-width: 100%;
+}
+
 .fallback-hero {
   background:
     radial-gradient(
