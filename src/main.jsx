@@ -1,380 +1,452 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import "./styles.css";
 
+/* ─── LINKS ─────────────────────────── */
 const links = {
   mercadoLivre: "https://www.mercadolivre.com.br/pagina/xikitainfantil",
   instagram: "https://instagram.com/",
   whatsapp: "https://wa.me/5500000000000",
 };
 
-const assets = {
+/* ─── IMAGENS ───────────────────────── */
+const img = {
   logo: "/xikita-logo.png",
   loja: "/xikita-loja.jpg",
+  hero: "https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=1400&auto=format&fit=crop&q=80",
+  children: [
+    "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=600&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=600&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=600&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1471286174890-9c112ac5c5b7?w=600&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=600&auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1560089000-7433a4ebbd64?w=600&auto=format&fit=crop&q=80",
+  ],
+  baby1: "https://images.unsplash.com/photo-1522771930-78848d9293e8?w=700&auto=format&fit=crop&q=80",
+  baby2: "https://images.unsplash.com/photo-1554696468-19f8c7a71a1a?w=700&auto=format&fit=crop&q=80",
+  gift:  "https://images.unsplash.com/photo-1607344645866-009c320b63e0?w=700&auto=format&fit=crop&q=80",
+  toys:  "https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=700&auto=format&fit=crop&q=80",
 };
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
-};
+/* ─── ANIMAÇÕES ─────────────────────── */
+const fadeUp  = { hidden: { opacity: 0, y: 28 }, show: { opacity: 1, y: 0, transition: { duration: 0.55 } } };
+const fadeIn  = { hidden: { opacity: 0 },        show: { opacity: 1, transition: { duration: 0.5 } } };
+const stagger = { show: { transition: { staggerChildren: 0.11 } } };
 
+/* ─── DADOS ─────────────────────────── */
 const categories = [
-  {
-    title: "Moda Infantil",
-    desc: "Roupinhas lindas e confortáveis para bebês e crianças brincarem livres.",
-    cta: "Ver coleção",
-  },
-  {
-    title: "Acessórios Infantis",
-    desc: "Laços, tiaras e detalhes que deixam cada look mais encantador.",
-    cta: "Ver acessórios",
-  },
-  {
-    title: "Presentes Especiais",
-    desc: "Escolhas afetivas para aniversários, visitas e momentos inesquecíveis.",
-    cta: "Ver presentes",
-  },
-  {
-    title: "Brinquedos e Novidades",
-    desc: "Itens criativos para surpreender os pequenos com alegria.",
-    cta: "Ver novidades",
-  },
+  { title: "Moda Infantil",       desc: "Roupinhas lindas e confortáveis para bebês e crianças viverem cada fase com estilo.",  cta: "Ver coleção",    img: img.baby1, badge: "Nova coleção"  },
+  { title: "Acessórios",          desc: "Laços, tiaras, meias e detalhes que transformam qualquer look num encanto só.",        cta: "Ver acessórios", img: img.baby2, badge: "Mais amado"    },
+  { title: "Presentes Especiais", desc: "Escolhas afetivas para aniversários e momentos que viram memória para sempre.",        cta: "Ver presentes",  img: img.gift,  badge: "Ideal para dar" },
+  { title: "Brinquedos",          desc: "Itens criativos e lúdicos que fazem os pequenos sorrirem a cada descoberta.",          cta: "Ver novidades",  img: img.toys,  badge: "Diversão"      },
 ];
 
-const leadForm = "https://forms.gle/SEU_FORM_AQUI";
+const stats = [
+  { value: "5.000+", label: "Famílias felizes"  },
+  { value: "1.200+", label: "Produtos infantis" },
+  { value: "8 anos", label: "De história"       },
+  { value: "4.9★",   label: "Avaliação média"   },
+];
 
-function App() {
+const depoimentos = [
+  { nome: "Camila R.",   nota: 5, texto: "Simplesmente apaixonada! O presente ficou perfeito e o atendimento foi acolhedor do início ao fim." },
+  { nome: "Juliana M.",  nota: 5, texto: "Minha filha amou as roupinhas. Qualidade excelente, entrega rápida e embalagem linda." },
+  { nome: "Fernanda S.", nota: 5, texto: "Já comprei várias vezes no Mercado Livre. Produtos originais, chegam rápido e com muito cuidado." },
+];
+
+/* ─── SUBCOMPONENTES ─────────────────── */
+function StarRating({ n = 5 }) {
   return (
-    <div className="min-h-screen bg-cream text-ink">
-      <header className="sticky top-0 z-40 border-b border-ink/10 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex w-[92vw] max-w-6xl items-center justify-between py-3">
-          <a href="#inicio" className="inline-flex items-center gap-3">
-            <img
-              src={assets.logo}
-              alt="Xikita Boutique"
-              className="h-11 w-auto"
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
+    <div className="flex gap-0.5">
+      {Array.from({ length: n }).map((_, i) => (
+        <svg key={i} className="h-4 w-4 fill-yellow-400" viewBox="0 0 20 20">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+      ))}
+    </div>
+  );
+}
+
+function CountUp({ target }) {
+  const [count, setCount] = useState(0);
+  const ref     = useRef(null);
+  const started = useRef(false);
+  const num     = parseFloat(String(target).replace(/[^0-9.]/g, ""));
+  const isNum   = !isNaN(num);
+
+  useEffect(() => {
+    if (!isNum) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started.current) {
+        started.current = true;
+        const steps = 50;
+        let i = 0;
+        const t = setInterval(() => {
+          i++;
+          setCount(Math.round((num / steps) * i));
+          if (i >= steps) clearInterval(t);
+        }, 28);
+      }
+    });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [num, isNum]);
+
+  return <span ref={ref}>{isNum ? String(target).replace(/[0-9.]+/, String(count)) : target}</span>;
+}
+
+function WaIcon() {
+  return (
+    <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.528 5.855L0 24l6.335-1.652A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.65-.49-5.19-1.349l-.37-.221-3.761.981.999-3.66-.242-.378A9.96 9.96 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+    </svg>
+  );
+}
+
+/* ─── APP PRINCIPAL ──────────────────── */
+function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
+  const heroY   = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const heroOpa = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
+
+  return (
+    <div className="xk-root">
+
+      {/* HEADER */}
+      <header className="xk-header">
+        <div className="xk-container xk-nav">
+          <a href="#inicio" className="xk-brand">
+            <img src={img.logo} alt="Xikita Boutique" className="xk-logo" />
           </a>
 
-          <nav className="hidden gap-6 text-sm font-semibold md:flex">
-            <a href="#inicio" className="hover:text-pink-600">
-              Início
-            </a>
-            <a href="#categorias" className="hover:text-pink-600">
-              Categorias
-            </a>
-            <a href="#mercado-livre" className="hover:text-pink-600">
-              Mercado Livre
-            </a>
-            <a href="#loja-presencial" className="hover:text-pink-600">
-              Loja física
-            </a>
-            <a href="#contato" className="hover:text-pink-600">
-              Contato
-            </a>
+          <nav className="xk-menu hidden md:flex">
+            {[["#inicio","Início"],["#categorias","Categorias"],["#mercado-livre","Mercado Livre"],["#loja","Loja Física"],["#contato","Contato"]].map(([h,l]) => (
+              <a key={h} href={h} className="xk-menu-link">{l}</a>
+            ))}
           </nav>
 
-          <a
-            href={links.whatsapp}
-            target="_blank"
-            rel="noreferrer"
-            className="rounded-full bg-pink-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-pink-600"
-          >
-            WhatsApp
-          </a>
+          <div className="flex items-center gap-3">
+            <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-wa hidden md:flex items-center gap-2">
+              <WaIcon /> WhatsApp
+            </a>
+            <button className="md:hidden p-1 text-ink" onClick={() => setMenuOpen(v => !v)} aria-label="menu">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+              </svg>
+            </button>
+          </div>
         </div>
+
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden border-t border-ink/10 bg-white px-6 md:hidden">
+              {[["#inicio","Início"],["#categorias","Categorias"],["#mercado-livre","Mercado Livre"],["#loja","Loja Física"],["#contato","Contato"]].map(([h,l]) => (
+                <a key={h} href={h} onClick={() => setMenuOpen(false)} className="block py-3 text-sm font-semibold hover:text-pink-600">{l}</a>
+              ))}
+              <a href={links.whatsapp} target="_blank" rel="noreferrer" className="mb-4 flex items-center justify-center gap-2 rounded-full bg-pink-500 py-3 text-sm font-bold text-white">
+                <WaIcon /> WhatsApp
+              </a>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       <main id="inicio">
-        <section className="hero-soft-bg">
-          <div className="mx-auto grid w-[92vw] max-w-6xl gap-6 py-14 md:grid-cols-2 md:py-20">
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="rounded-[26px] bg-white/90 p-7 shadow-soft md:p-10"
-            >
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
-                Nova coleção infantil
-              </p>
-              <h1 className="mt-3 text-3xl font-extrabold leading-tight md:text-5xl">
-                Mais encanto para quem você mais ama
-              </h1>
-              <p className="mt-4 text-base text-ink/75">
-                A Xikita une carinho, estilo e praticidade para mães e pais que
-                querem vestir e presentear com segurança.
-              </p>
 
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href={links.whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-                >
-                  Falar no WhatsApp
+        {/* HERO */}
+        <section ref={heroRef} className="xk-hero">
+          <motion.div style={{ y: heroY }} className="xk-hero-bg">
+            <img src={img.hero} alt="" className="xk-hero-img" />
+            <div className="xk-hero-overlay" />
+          </motion.div>
+          <motion.div style={{ opacity: heroOpa }} className="xk-hero-content xk-container">
+            <motion.div variants={stagger} initial="hidden" animate="show" className="xk-hero-copy">
+              <motion.span variants={fadeUp} className="xk-eyebrow-pill">Nova coleção infantil</motion.span>
+              <motion.h1 variants={fadeUp} className="xk-h1">
+                Mais encanto para<br />
+                <span className="xk-h1-highlight">quem você mais ama</span>
+              </motion.h1>
+              <motion.p variants={fadeUp} className="xk-hero-lead">
+                A Xikita une carinho, estilo e praticidade para mães e pais que querem
+                vestir, presentear e encantar seus pequenos todos os dias.
+              </motion.p>
+              <motion.div variants={fadeUp} className="xk-hero-actions">
+                <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-primary xk-glow-pink">
+                  <WaIcon /> Falar no WhatsApp
                 </a>
-                <a
-                  href={links.mercadoLivre}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-ink/20 bg-white px-5 py-3 text-sm font-bold transition hover:bg-ink/5"
-                >
-                  Comprar no Mercado Livre
+                <a href={links.mercadoLivre} target="_blank" rel="noreferrer" className="xk-btn xk-btn-glass">
+                  Ver no Mercado Livre
                 </a>
-              </div>
-
-              <div className="mt-6 grid gap-2 text-xs font-semibold text-ink/70 md:grid-cols-3">
-                <span>5.000+ famílias atendidas</span>
-                <span>8 anos de história</span>
-                <span>4.9★ avaliação média</span>
-              </div>
+              </motion.div>
+              <motion.div variants={fadeUp} className="xk-hero-badges">
+                {stats.map(s => (
+                  <div key={s.label} className="xk-hero-badge">
+                    <strong>{s.value}</strong><span>{s.label}</span>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
+          </motion.div>
+        </section>
 
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="relative overflow-hidden rounded-[26px] shadow-soft"
-            >
-              <img
-                src={assets.loja}
-                alt="Ambiente interno da loja Xikita Boutique"
-                className="h-full min-h-[360px] w-full object-cover"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-ink/5 via-transparent to-ink/35" />
-              <div className="absolute bottom-4 left-4 rounded-2xl bg-white/92 px-4 py-3 text-sm font-semibold shadow">
-                Loja física + digital: compre como preferir
-              </div>
-            </motion.div>
+        {/* STRIP NUMÉRICA */}
+        <section className="xk-strip">
+          <div className="xk-container xk-strip-grid">
+            {stats.map((s, i) => (
+              <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="xk-strip-item">
+                <p className="xk-strip-val"><CountUp target={s.value} /></p>
+                <p className="xk-strip-lbl">{s.label}</p>
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        <section id="categorias" className="bg-white py-16">
-          <div className="mx-auto w-[92vw] max-w-6xl">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
-              Nossas categorias
-            </p>
-            <h2 className="mt-2 text-3xl font-extrabold md:text-4xl">
-              Tudo para os pequenos, em um só lugar
-            </h2>
-            <p className="mt-3 max-w-2xl text-ink/75">
-              Produtos escolhidos com carinho para deixar a infância mais leve,
-              bonita e inesquecível.
-            </p>
-
-            <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {categories.map((item) => (
-                <motion.article
-                  key={item.title}
-                  variants={fadeUp}
-                  initial="hidden"
-                  whileInView="show"
-                  viewport={{ once: true }}
-                  className="rounded-3xl border border-ink/10 bg-gradient-to-br from-[#fff6fb] to-[#eef8ff] p-5 shadow-soft"
-                >
-                  <div className="mb-4 h-28 rounded-2xl bg-gradient-to-r from-blush to-baby" />
-                  <h3 className="text-lg font-bold">{item.title}</h3>
-                  <p className="mt-2 text-sm text-ink/75">{item.desc}</p>
-                  <a
-                    href={links.whatsapp}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-4 inline-block text-sm font-bold text-pink-600 hover:text-pink-700"
-                  >
-                    {item.cta}
-                  </a>
+        {/* CATEGORIAS */}
+        <section id="categorias" className="xk-section bg-white">
+          <div className="xk-container">
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-sec-head">
+              <p className="xk-eyebrow-dark">Nossas categorias</p>
+              <h2 className="xk-h2">Tudo para os pequenos, <span className="text-pink-500">em um só lugar</span></h2>
+              <p className="xk-sub">Produtos selecionados com carinho para deixar a infância mais leve, bonita e inesquecível.</p>
+            </motion.div>
+            <div className="xk-cat-grid">
+              {categories.map((item, i) => (
+                <motion.article key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.09 }} className="xk-cat-card">
+                  <div className="xk-cat-img-wrap">
+                    <img src={item.img} alt={item.title} className="xk-cat-img" loading="lazy" />
+                    <div className="xk-cat-overlay" />
+                    <span className="xk-cat-badge">{item.badge}</span>
+                  </div>
+                  <div className="xk-cat-body">
+                    <h3 className="xk-cat-title">{item.title}</h3>
+                    <p className="xk-cat-desc">{item.desc}</p>
+                    <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-cat-cta">{item.cta} →</a>
+                  </div>
                 </motion.article>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="mercado-livre" className="py-16">
-          <div className="mx-auto w-[92vw] max-w-6xl rounded-3xl bg-gradient-to-r from-[#ffeef7] to-[#eaf4ff] p-8 shadow-soft">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
-              Compre online com confiança
-            </p>
-            <h2 className="mt-2 text-3xl font-extrabold md:text-4xl">
-              Sessão oficial Mercado Livre Xikita
-            </h2>
-            <p className="mt-3 max-w-3xl text-ink/75">
-              Ideal para quem busca praticidade, reputação e entrega facilitada.
-              A mesma curadoria da loja, com a segurança do canal que você já
-              conhece.
-            </p>
-
-            <ul className="mt-4 grid gap-2 text-sm text-ink/85 md:grid-cols-2">
-              <li>• Compra segura e processo familiar</li>
-              <li>• Logística otimizada e previsibilidade</li>
-              <li>• Catálogo atualizado com novidades</li>
-              <li>• Experiência rápida para decisão de compra</li>
-            </ul>
-
-            <a
-              href={links.mercadoLivre}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-block rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-            >
-              Ir para o Mercado Livre
-            </a>
+        {/* GALERIA CRIANÇAS */}
+        <section className="xk-section xk-gallery-sec">
+          <div className="xk-container mb-8">
+            <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-eyebrow-dark text-center">Momentos reais</motion.p>
+            <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-h2 text-center">Cada criança, <span className="text-pink-500">um estilo único</span></motion.h2>
+          </div>
+          <div className="xk-gallery-grid">
+            {img.children.map((src, i) => (
+              <motion.div key={i} variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.07 }} className="xk-gallery-item">
+                <img src={src} alt={`criança ${i + 1}`} className="xk-gallery-img" loading="lazy" />
+                <div className="xk-gallery-shine" />
+              </motion.div>
+            ))}
           </div>
         </section>
 
-        <section id="loja-presencial" className="bg-white py-16">
-          <div className="mx-auto grid w-[92vw] max-w-6xl gap-8 md:grid-cols-2">
-            <div className="rounded-3xl p-3 shadow-soft">
-              <img
-                src={assets.loja}
-                alt="Interior da loja presencial Xikita Boutique"
-                className="h-full min-h-[340px] w-full rounded-2xl object-cover"
-                loading="lazy"
-              />
-            </div>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
-                Loja presencial
-              </p>
-              <h2 className="mt-2 text-3xl font-extrabold md:text-4xl">
-                Uma experiência real para encantar sua família
-              </h2>
-              <p className="mt-4 text-ink/75">
-                Na loja física, você sente a qualidade das peças, monta
-                combinações e recebe atendimento acolhedor para acertar em cada
-                escolha.
-              </p>
-              <p className="mt-3 text-ink/75">
-                Veja novidades diárias e bastidores no nosso Instagram.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a
-                  href={links.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-                >
-                  Ir para o Instagram
-                </a>
-                <a
-                  href={links.whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="rounded-full border border-ink/20 bg-white px-5 py-3 text-sm font-bold transition hover:bg-ink/5"
-                >
-                  Tirar dúvidas no WhatsApp
-                </a>
+        {/* MERCADO LIVRE */}
+        <section id="mercado-livre" className="xk-ml-sec">
+          <div className="xk-ml-glow-l" />
+          <div className="xk-ml-glow-r" />
+          <div className="xk-container xk-ml-grid">
+
+            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-ml-copy">
+              <motion.span variants={fadeUp} className="xk-badge-yellow">Canal oficial online</motion.span>
+              <motion.h2 variants={fadeUp} className="xk-h2 text-white mt-3">
+                Compre na Xikita pelo<br />
+                <span className="xk-ml-brand">Mercado Livre</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="xk-sub text-white/80 mt-4">
+                A mesma curadoria da loja física com a segurança e praticidade do maior marketplace do Brasil.
+              </motion.p>
+              <motion.ul variants={fadeUp} className="xk-ml-list">
+                {["Compra 100% segura com garantia","Reputação consolidada e transparente","Frete rápido para todo o Brasil","Catálogo sempre atualizado","Parcelamento disponível"].map(t => (
+                  <li key={t}><span className="xk-ml-check">✓</span>{t}</li>
+                ))}
+              </motion.ul>
+              <motion.a variants={fadeUp} href={links.mercadoLivre} target="_blank" rel="noreferrer" className="xk-btn xk-btn-ml xk-glow-yellow mt-8 inline-flex">
+                Acessar loja no Mercado Livre
+              </motion.a>
+            </motion.div>
+
+            <motion.div variants={fadeIn} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-ml-visual">
+              <div className="xk-ml-stack">
+                <div className="xk-ml-card xk-ml-card-back">
+                  <img src={img.children[1]} alt="" className="xk-ml-card-img" />
+                </div>
+                <div className="xk-ml-card xk-ml-card-front">
+                  <img src={img.children[0]} alt="" className="xk-ml-card-img" />
+                </div>
+                <div className="xk-ml-float-badge">
+                  <StarRating />
+                  <p className="text-xs font-bold mt-1 text-ink">4.9 no Mercado Livre</p>
+                </div>
               </div>
+            </motion.div>
+
+          </div>
+        </section>
+
+        {/* LOJA FÍSICA */}
+        <section id="loja" className="xk-section bg-white">
+          <div className="xk-container xk-loja-grid">
+
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-loja-visual">
+              <div className="xk-loja-frame">
+                <img src={img.loja} alt="Interior da Xikita Boutique" className="xk-loja-img" />
+                <div className="xk-loja-glow" />
+              </div>
+              <div className="xk-loja-chip">
+                <span className="xk-dot-green" />
+                Loja aberta agora
+              </div>
+            </motion.div>
+
+            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }}>
+              <motion.p variants={fadeUp} className="xk-eyebrow-dark">Loja física</motion.p>
+              <motion.h2 variants={fadeUp} className="xk-h2 mt-1">
+                Venha viver a<br />
+                <span className="text-pink-500">experiência Xikita</span>
+              </motion.h2>
+              <motion.p variants={fadeUp} className="xk-sub mt-4">
+                Toque nas peças, sinta a qualidade e receba atendimento de quem entende de moda infantil. Cada visita vira uma memória afetiva.
+              </motion.p>
+              <motion.ul variants={fadeUp} className="xk-check-list mt-4">
+                {["Produtos exclusivos na loja","Atendimento humano e personalizado","Ambiente acolhedor para a família","Novidades diárias no Instagram"].map(t => (
+                  <li key={t}>{t}</li>
+                ))}
+              </motion.ul>
+              <motion.div variants={fadeUp} className="mt-6 flex flex-wrap gap-4">
+                <a href={links.instagram} target="_blank" rel="noreferrer" className="xk-btn xk-btn-primary xk-glow-pink">Ver no Instagram</a>
+                <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-outline">Tirar dúvidas</a>
+              </motion.div>
+            </motion.div>
+
+          </div>
+        </section>
+
+        {/* DEPOIMENTOS */}
+        <section className="xk-section xk-depoi-sec">
+          <div className="xk-container">
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-sec-head">
+              <p className="xk-eyebrow-dark">Quem compra, ama</p>
+              <h2 className="xk-h2">Amor que <span className="text-pink-500">fala por si</span></h2>
+            </motion.div>
+            <div className="xk-depoi-grid">
+              {depoimentos.map((d, i) => (
+                <motion.article key={i} variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} transition={{ delay: i * 0.1 }} className="xk-depoi-card">
+                  <StarRating n={d.nota} />
+                  <p className="mt-3 text-sm text-ink/80 leading-relaxed">"{d.texto}"</p>
+                  <p className="mt-4 text-xs font-bold text-ink/55">— {d.nome}</p>
+                </motion.article>
+              ))}
+            </div>
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="mt-6 flex flex-wrap justify-center gap-2">
+              {["Tudo lindo!","Entrega rápida","Atendimento incrível","Voltarei sempre","Super recomendo"].map(t => (
+                <span key={t} className="rounded-full bg-[#EADFFF] px-3 py-1 text-xs font-semibold text-ink/80">{t}</span>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* CTA FINAL */}
+        <section className="xk-cta-final">
+          <div className="xk-cta-glow-l" />
+          <div className="xk-cta-glow-r" />
+          <div className="xk-container text-center relative z-10">
+            <motion.h2 variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-h2 text-white">
+              Cada peça conta uma<br />
+              <span className="xk-h1-highlight">história de amor</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="xk-sub text-white/80 mt-4 max-w-2xl mx-auto">
+              Da primeira roupinha ao presente especial — tudo na Xikita é escolhido para fazer parte dos momentos únicos da infância dos seus filhos.
+            </motion.p>
+            <motion.div variants={fadeUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="mt-8 flex flex-wrap justify-center gap-4">
+              <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-primary xk-glow-pink flex items-center gap-2"><WaIcon /> Falar no WhatsApp</a>
+              <a href={links.mercadoLivre} target="_blank" rel="noreferrer" className="xk-btn xk-btn-glass">Comprar no Mercado Livre</a>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* LEAD */}
+        <section id="lead" className="xk-section bg-white">
+          <div className="xk-container">
+            <div className="xk-lead-box">
+              <div>
+                <h2 className="xk-h2">Fique por dentro das novidades</h2>
+                <p className="xk-sub mt-2">Receba em primeira mão novas coleções, presentes e ofertas especiais direto no seu contato.</p>
+              </div>
+              <form className="xk-lead-form" onSubmit={e => e.preventDefault()}>
+                <input type="text" required placeholder="Seu nome" className="xk-input" />
+                <input type="text" required placeholder="WhatsApp ou e-mail" className="xk-input" />
+                <button type="submit" className="xk-btn xk-btn-primary xk-glow-pink whitespace-nowrap">Quero receber</button>
+              </form>
             </div>
           </div>
         </section>
 
-        <section id="lead" className="py-16">
-          <div className="mx-auto w-[92vw] max-w-6xl rounded-3xl bg-gradient-to-r from-butter to-mint p-8 shadow-soft">
-            <h2 className="text-3xl font-extrabold md:text-4xl">
-              Receba novidades e ofertas em primeira mão
-            </h2>
-            <p className="mt-3 max-w-2xl text-ink/80">
-              Cadastre seu contato e seja avisada sobre novas coleções, kits e
-              oportunidades especiais da Xikita.
-            </p>
-            <form
-              action={leadForm}
-              method="get"
-              target="_blank"
-              className="mt-6 grid gap-3 md:grid-cols-[1fr_1fr_auto]"
-            >
-              <input
-                type="text"
-                name="nome"
-                required
-                placeholder="Seu nome"
-                className="rounded-full border border-ink/15 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-pink-300"
-              />
-              <input
-                type="text"
-                name="contato"
-                required
-                placeholder="Seu WhatsApp ou e-mail"
-                className="rounded-full border border-ink/15 bg-white px-4 py-3 outline-none focus:ring-2 focus:ring-pink-300"
-              />
-              <button
-                type="submit"
-                className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-              >
-                Quero receber
-              </button>
-            </form>
-          </div>
-        </section>
       </main>
 
-      <a
-        href={links.whatsapp}
-        target="_blank"
-        rel="noreferrer"
-        className="fixed bottom-5 right-5 z-50 rounded-full bg-green-500 px-5 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-green-600"
-      >
-        WhatsApp
-      </a>
-
-      <footer id="contato" className="bg-ink py-12 text-white">
-        <div className="mx-auto grid w-[92vw] max-w-6xl gap-8 md:grid-cols-4">
+      {/* FOOTER */}
+      <footer id="contato" className="xk-footer">
+        <div className="xk-container xk-footer-grid">
           <div>
-            <img
-              src={assets.logo}
-              alt="Xikita Boutique"
-              className="h-10 w-auto"
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
-            <p className="mt-2 text-sm text-white/80">
-              Moda infantil, acessórios e presentes selecionados com amor para
-              bebês e crianças.
-            </p>
+            <img src={img.logo} alt="Xikita" className="h-10 w-auto mb-3" />
+            <p className="text-sm text-white/70 max-w-xs">Moda infantil, acessórios, brinquedos e presentes selecionados com amor para bebês e crianças.</p>
           </div>
           <div>
-            <h4 className="font-semibold">Canais</h4>
-            <ul className="mt-2 space-y-1 text-sm text-white/80">
-              <li>Instagram</li>
-              <li>Mercado Livre</li>
-              <li>WhatsApp</li>
+            <h4 className="xk-footer-h">Links</h4>
+            <ul className="xk-footer-ul">
+              {[["#inicio","Início"],["#categorias","Categorias"],["#mercado-livre","Mercado Livre"],["#loja","Loja Física"]].map(([h,l]) => (
+                <li key={h}><a href={h} className="hover:text-pink-400">{l}</a></li>
+              ))}
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold">Informações</h4>
-            <ul className="mt-2 space-y-1 text-sm text-white/80">
+            <h4 className="xk-footer-h">Canais</h4>
+            <ul className="xk-footer-ul">
+              <li><a href={links.instagram} target="_blank" rel="noreferrer" className="hover:text-pink-400">Instagram</a></li>
+              <li><a href={links.mercadoLivre} target="_blank" rel="noreferrer" className="hover:text-pink-400">Mercado Livre</a></li>
+              <li><a href={links.whatsapp} target="_blank" rel="noreferrer" className="hover:text-pink-400">WhatsApp</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="xk-footer-h">Informações</h4>
+            <ul className="xk-footer-ul">
               <li>Telefone: [INSERIR]</li>
               <li>E-mail: [INSERIR]</li>
               <li>Endereço: [INSERIR]</li>
               <li>Horário: [INSERIR]</li>
             </ul>
           </div>
-          <div>
-            <h4 className="font-semibold">Pagamento</h4>
-            <ul className="mt-2 space-y-1 text-sm text-white/80">
-              <li>Pix</li>
-              <li>Cartão</li>
-              <li>Boleto</li>
-              <li>Mercado Livre</li>
-            </ul>
-          </div>
+        </div>
+        <div className="border-t border-white/10 mt-8 pt-6 text-center text-xs text-white/40 xk-container">
+          © 2026 Xikita Boutique. Todos os direitos reservados.
         </div>
       </footer>
+
+      {/* BOTÃO FLUTUANTE */}
+      <motion.a
+        href={links.whatsapp}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Falar no WhatsApp"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 1.2, type: "spring", stiffness: 260, damping: 20 }}
+        whileHover={{ scale: 1.12 }}
+        className="xk-wa-float xk-glow-green"
+      >
+        <WaIcon />
+      </motion.a>
+
     </div>
   );
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <React.StrictMode><App /></React.StrictMode>
 );
