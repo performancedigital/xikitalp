@@ -3,75 +3,127 @@ import ReactDOM from "react-dom/client";
 import { motion } from "framer-motion";
 import "./styles.css";
 
+const links = {
+  instagram: "https://instagram.com/",
+  facebook: "https://facebook.com/",
+  mercadoLivre: "https://mercadolivre.com.br/",
+  whatsapp: "https://wa.me/5500000000000",
+  driveFotos:
+    "https://drive.google.com/drive/folders/1ZwYIZp4J0gLYu7tBittw79YLrfK3LuJc",
+};
+
 const fadeUp = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: 18 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45 } },
 };
 
 const categories = [
   {
     title: "Moda Infantil",
-    desc: "Roupinhas lindas, confortáveis e cheias de estilo para bebês e crianças.",
+    desc: "Roupinhas lindas e confortáveis para bebês e crianças brincarem livres.",
     cta: "Ver coleção",
+    bg: "from-[#ffeef4] to-[#fdf7ff]",
   },
   {
     title: "Acessórios Infantis",
-    desc: "Laços, bolsas, meias, tiaras e detalhes que deixam tudo mais encantador.",
+    desc: "Laços, tiaras, meias e detalhes que deixam cada look mais encantador.",
     cta: "Ver acessórios",
+    bg: "from-[#fff6da] to-[#fff3ef]",
   },
   {
     title: "Presentes Especiais",
-    desc: "Opções criativas e afetivas para aniversários, visitas e datas únicas.",
+    desc: "Escolhas afetivas para aniversários, visitas e momentos que viram memória.",
     cta: "Ver presentes",
+    bg: "from-[#eaf4ff] to-[#f3faff]",
   },
   {
     title: "Brinquedos e Novidades",
-    desc: "Itens lúdicos e divertidos escolhidos para encantar os pequenos.",
+    desc: "Itens criativos para surpreender os pequenos com alegria e descoberta.",
     cta: "Ver novidades",
+    bg: "from-[#effcf5] to-[#f7fffc]",
   },
 ];
 
 const benefits = [
   {
-    t: "Atendimento personalizado",
-    d: "Te ajudamos a escolher tamanho, presente e a melhor opção para cada criança.",
+    title: "Atendimento acolhedor",
+    desc: "Ajudamos você a escolher o tamanho, o presente e o melhor combo para cada fase.",
   },
   {
-    t: "Curadoria com carinho",
-    d: "Selecionamos produtos infantis bonitos, úteis e especiais para cada fase.",
+    title: "Curadoria com carinho",
+    desc: "Selecionamos peças bonitas, úteis e especiais para facilitar sua decisão.",
   },
   {
-    t: "Conforto e qualidade",
-    d: "Peças pensadas para vestir bem, durar mais e acompanhar a rotina.",
+    title: "Conforto que acompanha",
+    desc: "Produtos pensados para rotina real: brincar, passear e crescer com leveza.",
   },
   {
-    t: "Presentes que encantam",
-    d: "Transforme uma compra em uma lembrança cheia de afeto.",
+    title: "Compra segura e prática",
+    desc: "Atendimento rápido no WhatsApp, redes sociais e canais digitais oficiais.",
   },
   {
-    t: "Compra fácil e segura",
-    d: "Atendimento rápido no WhatsApp, redes sociais e canais online.",
+    title: "Presentes que emocionam",
+    desc: "Transforme uma compra simples em uma lembrança com significado.",
+  },
+];
+
+const channels = [
+  {
+    name: "Instagram",
+    text: "Veja lançamentos, looks prontos e bastidores da loja.",
+    button: "Seguir no Instagram",
+    href: links.instagram,
+  },
+  {
+    name: "Facebook",
+    text: "Acompanhe novidades, promoções e coleções infantis.",
+    button: "Curtir no Facebook",
+    href: links.facebook,
+  },
+  {
+    name: "Mercado Livre",
+    text: "Compre com praticidade, reputação e logística facilitada.",
+    button: "Comprar no Mercado Livre",
+    href: links.mercadoLivre,
+  },
+  {
+    name: "WhatsApp",
+    text: "Fale com nossa equipe e receba orientação personalizada.",
+    button: "Falar no WhatsApp",
+    href: links.whatsapp,
   },
 ];
 
 function App() {
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-30 border-b border-ink/10 bg-white/80 backdrop-blur">
+    <div className="min-h-screen bg-cream text-ink">
+      <header className="sticky top-0 z-30 border-b border-ink/10 bg-white/85 backdrop-blur">
         <div className="mx-auto flex w-[92vw] max-w-6xl items-center justify-between py-4">
-          <a href="#inicio" className="text-lg font-extrabold">
+          <a href="#inicio" className="text-lg font-extrabold tracking-tight">
             Xikita Boutique
           </a>
-          <nav className="hidden gap-6 text-sm font-medium md:flex">
-            <a href="#inicio">Início</a>
-            <a href="#categorias">Categorias</a>
-            <a href="#sobre">Sobre</a>
-            <a href="#avaliacoes">Avaliações</a>
-            <a href="#contato">Contato</a>
+          <nav className="hidden gap-6 text-sm font-semibold md:flex">
+            <a href="#inicio" className="hover:text-pink-600">
+              Início
+            </a>
+            <a href="#categorias" className="hover:text-pink-600">
+              Categorias
+            </a>
+            <a href="#sobre" className="hover:text-pink-600">
+              Sobre
+            </a>
+            <a href="#avaliacoes" className="hover:text-pink-600">
+              Avaliações
+            </a>
+            <a href="#contato" className="hover:text-pink-600">
+              Contato
+            </a>
           </nav>
           <a
-            href="#canais"
-            className="rounded-full bg-blush px-4 py-2 text-sm font-bold transition hover:brightness-95"
+            href={links.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full bg-pink-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-pink-600"
           >
             Comprar agora
           </a>
@@ -79,50 +131,72 @@ function App() {
       </header>
 
       <main id="inicio">
-        <section className="mx-auto grid w-[92vw] max-w-6xl gap-6 py-14 md:grid-cols-2 md:py-20">
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="rounded-3xl bg-gradient-to-br from-baby via-lilac to-blush p-6 shadow-soft md:p-10"
-          >
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-ink/70">
-              Nova coleção infantil
-            </p>
-            <h1 className="mt-3 text-3xl font-extrabold leading-tight md:text-5xl">
-              Moda, presentes e encanto em cada escolha
-            </h1>
-            <p className="mt-4 text-ink/80">
-              Peças infantis, acessórios encantadores e presentes especiais para
-              vestir, cuidar e surpreender quem você ama.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <a
-                href="#canais"
-                className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-              >
-                Comprar Agora
-              </a>
-              <a
-                href="#categorias"
-                className="rounded-full border border-ink/20 bg-white px-5 py-3 text-sm font-bold transition hover:bg-ink/5"
-              >
-                Ver Catálogo
-              </a>
-            </div>
-          </motion.div>
-          <motion.div
-            variants={fadeUp}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="min-h-[320px] rounded-3xl bg-[radial-gradient(circle_at_20%_20%,#fff,transparent_40%),linear-gradient(135deg,#DDF5E8,#FFF6CC)] shadow-soft"
-            aria-label="Imagem da loja infantil"
-          />
+        <section className="hero-soft-bg">
+          <div className="mx-auto grid w-[92vw] max-w-6xl gap-6 py-14 md:grid-cols-2 md:py-20">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="rounded-[26px] bg-white/88 p-7 shadow-soft md:p-10"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
+                Nova coleção infantil
+              </p>
+              <h1 className="mt-3 text-3xl font-extrabold leading-tight md:text-5xl">
+                Moda, presentes e carinho em cada escolha
+              </h1>
+              <p className="mt-4 text-base text-ink/75">
+                Para mães e pais que querem vestir, cuidar e surpreender seus
+                pequenos com beleza, conforto e afeto.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href={links.whatsapp}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
+                >
+                  Falar com especialista
+                </a>
+                <a
+                  href="#categorias"
+                  className="rounded-full border border-ink/20 bg-white px-5 py-3 text-sm font-bold transition hover:bg-ink/5"
+                >
+                  Ver catálogo
+                </a>
+              </div>
+              <p className="mt-5 text-xs font-medium text-ink/60">
+                Loja física e canais digitais oficiais para compra segura.
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="relative overflow-hidden rounded-[26px] shadow-soft"
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-ink/15 via-ink/5 to-ink/30" />
+              <img
+                src="/hero-xikita.jpg"
+                alt="Fachada ou interior da loja Xikita Boutique"
+                className="h-full min-h-[340px] w-full object-cover"
+                loading="eager"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
+              <div className="absolute inset-0 fallback-hero" />
+              <div className="absolute bottom-4 left-4 rounded-2xl bg-white/90 px-4 py-3 text-sm font-semibold shadow">
+                Sua compra com toque humano e entrega ágil
+              </div>
+            </motion.div>
+          </div>
         </section>
 
-        <section id="categorias" className="bg-white py-14">
+        <section id="categorias" className="bg-white py-16">
           <div className="mx-auto w-[92vw] max-w-6xl">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
               Nossas categorias
@@ -130,10 +204,11 @@ function App() {
             <h2 className="mt-2 text-3xl font-extrabold md:text-4xl">
               Tudo para os pequenos, em um só lugar
             </h2>
-            <p className="mt-3 text-ink/80">
-              Explore produtos selecionados com carinho para deixar a infância
-              ainda mais especial.
+            <p className="mt-3 max-w-2xl text-ink/75">
+              Produtos escolhidos com carinho para deixar a infância mais leve,
+              bonita e inesquecível.
             </p>
+
             <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {categories.map((item) => (
                 <motion.article
@@ -142,13 +217,15 @@ function App() {
                   initial="hidden"
                   whileInView="show"
                   viewport={{ once: true }}
-                  className="rounded-3xl border border-ink/10 bg-cream p-5 shadow-soft"
+                  className={`rounded-3xl border border-ink/10 bg-gradient-to-br p-5 shadow-soft ${item.bg}`}
                 >
                   <h3 className="text-lg font-bold">{item.title}</h3>
                   <p className="mt-2 text-sm text-ink/75">{item.desc}</p>
                   <a
-                    href="#canais"
-                    className="mt-4 inline-block text-sm font-bold text-pink-600"
+                    href={links.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="mt-4 inline-block text-sm font-bold text-pink-600 hover:text-pink-700"
                   >
                     {item.cta}
                   </a>
@@ -158,23 +235,27 @@ function App() {
           </div>
         </section>
 
-        <section className="bg-gradient-to-b from-lilac/35 to-baby/30 py-14">
+        <section className="bg-gradient-to-b from-[#fff7fb] to-[#eef8ff] py-16">
           <div className="mx-auto w-[92vw] max-w-6xl">
             <h2 className="text-3xl font-extrabold md:text-4xl">
               Uma experiência de compra feita com amor
             </h2>
+            <p className="mt-3 max-w-2xl text-ink/75">
+              Menos dúvida, mais segurança para você escolher o melhor para quem
+              mais ama.
+            </p>
             <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {benefits.map((b) => (
+              {benefits.map((item) => (
                 <motion.article
-                  key={b.t}
+                  key={item.title}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="show"
                   viewport={{ once: true }}
                   className="rounded-3xl bg-white p-5 shadow-soft"
                 >
-                  <h3 className="font-bold">{b.t}</h3>
-                  <p className="mt-2 text-sm text-ink/75">{b.d}</p>
+                  <h3 className="font-bold">{item.title}</h3>
+                  <p className="mt-2 text-sm text-ink/75">{item.desc}</p>
                 </motion.article>
               ))}
             </div>
@@ -190,79 +271,92 @@ function App() {
           </div>
         </section>
 
-        <section id="canais" className="bg-white py-14">
+        <section id="canais" className="bg-white py-16">
           <div className="mx-auto w-[92vw] max-w-6xl">
             <h2 className="text-3xl font-extrabold md:text-4xl">
-              Compre com a gente onde preferir!
+              Compre com a gente onde preferir
             </h2>
+            <p className="mt-3 max-w-2xl text-ink/75">
+              Escolha seu canal favorito e conte com atendimento próximo em
+              todas as etapas.
+            </p>
             <div className="mt-8 grid gap-4 md:grid-cols-2">
-              <Channel
-                name="Instagram"
-                text="Veja novidades, looks infantis, presentes e bastidores da loja."
-                btn="Seguir no Instagram"
-              />
-              <Channel
-                name="Facebook"
-                text="Acompanhe ofertas, coleções e novidades infantis."
-                btn="Curtir no Facebook"
-              />
-              <Channel
-                name="Mercado Livre"
-                text="Compre com praticidade, segurança e entrega facilitada."
-                btn="Comprar no Mercado Livre"
-              />
-              <Channel
-                name="WhatsApp"
-                text="Fale com nossa equipe e receba atendimento personalizado."
-                btn="Falar no WhatsApp"
-              />
+              {channels.map((channel) => (
+                <Channel key={channel.name} {...channel} />
+              ))}
             </div>
           </div>
         </section>
 
-        <section id="sobre" className="py-14">
+        <section id="sobre" className="py-16">
           <div className="mx-auto grid w-[92vw] max-w-6xl gap-8 md:grid-cols-2">
-            <div className="min-h-[280px] rounded-3xl bg-gradient-to-br from-butter to-mint shadow-soft" />
+            <div className="rounded-3xl bg-white p-4 shadow-soft">
+              <img
+                src="/loja-xikita.jpg"
+                alt="Interior da loja Xikita Boutique"
+                className="h-full min-h-[300px] w-full rounded-2xl object-cover"
+                loading="lazy"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                }}
+              />
+              <div className="fallback-store rounded-2xl" />
+            </div>
             <div>
-              <h2 className="text-3xl font-extrabold md:text-4xl">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-600">
+                Nossa essência
+              </p>
+              <h2 className="mt-2 text-3xl font-extrabold md:text-4xl">
                 Feito com amor, entregue com alma
               </h2>
-              <p className="mt-4 text-ink/80">
+              <p className="mt-4 text-ink/75">
                 A Xikita Boutique nasceu para transformar compras infantis em
                 momentos especiais. Cada roupa, acessório, brinquedo e presente
-                é escolhido com carinho para acompanhar a infância com beleza,
-                conforto e afeto.
+                é escolhido com carinho para acompanhar a infância com conforto,
+                beleza e afeto.
               </p>
-              <p className="mt-4 text-ink/80">
-                Mais do que vender produtos infantis, queremos ajudar famílias a
-                encontrarem escolhas que carregam cuidado, intenção e amor.
+              <p className="mt-4 text-ink/75">
+                Mais do que vender, queremos facilitar a vida de quem cuida:
+                atendimento acolhedor, escolhas certeiras e compra sem estresse.
               </p>
               <ul className="mt-4 space-y-2 text-sm text-ink/85">
                 <li>• Produtos infantis selecionados</li>
-                <li>• Atendimento acolhedor</li>
+                <li>• Atendimento humano e rápido</li>
                 <li>• Opções para bebês e crianças</li>
-                <li>• Presentes para encantar</li>
+                <li>• Presentes para encantar de verdade</li>
               </ul>
-              <a
-                href="#categorias"
-                className="mt-6 inline-block rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-              >
-                Conheça a coleção
-              </a>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href={links.instagram}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
+                >
+                  Conheça a coleção
+                </a>
+                <a
+                  href={links.driveFotos}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-ink/20 bg-white px-5 py-3 text-sm font-bold transition hover:bg-ink/5"
+                >
+                  Ver fotos reais da loja
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
-        <section className="bg-white py-14">
+        <section className="bg-white py-16">
           <div className="mx-auto w-[92vw] max-w-6xl">
             <h2 className="text-3xl font-extrabold md:text-4xl">
               Amor que fala por si
             </h2>
             <div className="mt-6 rounded-3xl bg-cream p-6 shadow-soft">
               <p className="text-ink/85">
-                “Simplesmente apaixonada pela Xikita! Comprei um presente
-                infantil e foi lindo do início ao fim. A qualidade das peças é
-                excelente e o atendimento foi muito carinhoso.”
+                “Simplesmente apaixonada pela Xikita! Comprei um presente e foi
+                lindo do início ao fim. Qualidade excelente e atendimento muito
+                carinhoso.”
               </p>
             </div>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -271,19 +365,19 @@ function App() {
                 "Atendimento maravilhoso",
                 "Entrega rápida",
                 "Produtos encantadores",
-              ].map((m) => (
+              ].map((item) => (
                 <span
-                  key={m}
+                  key={item}
                   className="rounded-full bg-lilac px-3 py-1 text-xs font-semibold"
                 >
-                  {m}
+                  {item}
                 </span>
               ))}
             </div>
           </div>
         </section>
 
-        <section className="py-14">
+        <section className="py-16">
           <div className="mx-auto w-[92vw] max-w-6xl rounded-3xl bg-gradient-to-r from-blush to-baby p-8 shadow-soft">
             <h2 className="text-3xl font-extrabold md:text-4xl">
               Cada peça conta uma história de amor
@@ -299,36 +393,13 @@ function App() {
               <li>• Atendimento feito com carinho</li>
             </ul>
             <a
-              href="#canais"
+              href={links.whatsapp}
+              target="_blank"
+              rel="noreferrer"
               className="mt-6 inline-block rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
             >
-              Quero Comprar
+              Quero comprar
             </a>
-          </div>
-        </section>
-
-        <section className="bg-white py-14">
-          <div className="mx-auto w-[92vw] max-w-6xl rounded-3xl border border-ink/10 p-6 shadow-soft">
-            <h2 className="text-2xl font-extrabold md:text-3xl">
-              Fique por dentro das novidades
-            </h2>
-            <p className="mt-2 text-ink/80">
-              Receba em primeira mão novas coleções, presentes infantis e
-              ofertas especiais.
-            </p>
-            <form className="mt-5 flex flex-col gap-3 md:flex-row">
-              <input
-                type="email"
-                placeholder="seu@email.com"
-                className="w-full rounded-full border border-ink/20 px-4 py-3 outline-none focus:ring-2 focus:ring-pink-300"
-              />
-              <button
-                type="button"
-                className="rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition hover:bg-ink/90"
-              >
-                Assinar
-              </button>
-            </form>
           </div>
         </section>
       </main>
@@ -355,10 +426,10 @@ function App() {
           <div>
             <h4 className="font-semibold">Informações</h4>
             <ul className="mt-2 space-y-1 text-sm text-white/80">
-              <li>Telefone</li>
-              <li>E-mail</li>
-              <li>Endereço</li>
-              <li>Horário de atendimento</li>
+              <li>Telefone: [INSERIR]</li>
+              <li>E-mail: [INSERIR]</li>
+              <li>Endereço: [INSERIR]</li>
+              <li>Horário: [INSERIR]</li>
             </ul>
           </div>
           <div>
@@ -376,16 +447,18 @@ function App() {
   );
 }
 
-function Channel({ name, text, btn }) {
+function Channel({ name, text, button, href }) {
   return (
     <article className="rounded-3xl border border-ink/10 bg-cream p-5 shadow-soft">
       <h3 className="text-lg font-bold">{name}</h3>
       <p className="mt-2 text-sm text-ink/75">{text}</p>
       <a
-        href="#"
+        href={href}
+        target="_blank"
+        rel="noreferrer"
         className="mt-4 inline-block rounded-full bg-white px-4 py-2 text-sm font-bold transition hover:bg-ink hover:text-white"
       >
-        {btn}
+        {button}
       </a>
     </article>
   );
