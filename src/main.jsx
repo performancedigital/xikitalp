@@ -124,7 +124,7 @@ function App() {
 
           <nav className="xk-menu hidden md:flex">
             {[["#inicio","Início"],["#categorias","Categorias"],["#mercado-livre","Mercado Livre"],["#loja","Loja Física"],["#contato","Contato"]].map(([h,l]) => (
-              <a key={h} href={h} className="xk-menu-link">{l}</a>
+              <a key={h} href={h} className="xk-menu-pill">{l}</a>
             ))}
           </nav>
 
@@ -174,19 +174,12 @@ function App() {
                 vestir, presentear e encantar seus pequenos todos os dias.
               </motion.p>
               <motion.div variants={fadeUp} className="xk-hero-actions">
-                <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-primary xk-glow-pink">
+                <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-hero xk-glow-pink">
                   <WaIcon /> Falar no WhatsApp
                 </a>
                 <a href={links.mercadoLivre} target="_blank" rel="noreferrer" className="xk-btn xk-btn-glass">
                   Ver no Mercado Livre
                 </a>
-              </motion.div>
-              <motion.div variants={fadeUp} className="xk-hero-badges">
-                {stats.map(s => (
-                  <div key={s.label} className="xk-hero-badge">
-                    <strong>{s.value}</strong><span>{s.label}</span>
-                  </div>
-                ))}
               </motion.div>
             </motion.div>
           </motion.div>
@@ -223,7 +216,6 @@ function App() {
                   <div className="xk-cat-body">
                     <h3 className="xk-cat-title">{item.title}</h3>
                     <p className="xk-cat-desc">{item.desc}</p>
-                    <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-cat-cta">{item.cta} →</a>
                   </div>
                 </motion.article>
               ))}
@@ -319,9 +311,8 @@ function App() {
                   <li key={t}>{t}</li>
                 ))}
               </motion.ul>
-              <motion.div variants={fadeUp} className="mt-6 flex flex-wrap gap-4">
+              <motion.div variants={fadeUp} className="mt-6">
                 <a href={links.instagram} target="_blank" rel="noreferrer" className="xk-btn xk-btn-primary xk-glow-pink">Ver no Instagram</a>
-                <a href={links.whatsapp} target="_blank" rel="noreferrer" className="xk-btn xk-btn-outline">Tirar dúvidas</a>
               </motion.div>
             </motion.div>
 
@@ -400,7 +391,7 @@ function App() {
           <div>
             <h4 className="xk-footer-h">Links</h4>
             <ul className="xk-footer-ul">
-              {[["#inicio","Início"],["#categorias","Categorias"],["#mercado-livre","Mercado Livre"],["#loja","Loja Física"]].map(([h,l]) => (
+              {[ ["#inicio","Início"],["#categorias","Categorias"],["#mercado-livre","Mercado Livre"],["#loja","Loja Física"] ].map(([h,l]) => (
                 <li key={h}><a href={h} className="hover:text-pink-400">{l}</a></li>
               ))}
             </ul>
